@@ -35,35 +35,9 @@
       background: var(--bg);
     }
 
-    /* Shape selector */
-    .picker {
-      display: flex;
-      justify-content: center;
-      gap: 10px;
-      margin: 18px 0 36px;
-    }
-
-    .picker button {
-      background: transparent;
-      color: var(--muted);
-      border: 1px solid var(--line);
-      border-radius: 999px;
-      padding: 9px 22px;
-      font: inherit;
-      font-size: 16px;
-      cursor: pointer;
-      transition: color 0.2s, border-color 0.2s;
-    }
-
-    .picker button:hover { color: var(--text); border-color: #4a5264; }
-
-    .picker button[aria-pressed="true"] {
-      color: var(--text);
-      border-color: var(--text);
-    }
-
     /* About */
     .about {
+      margin-top: 28px;
       border-top: 1px solid var(--line);
       padding-top: 22px;
     }
@@ -88,13 +62,7 @@
 <body>
   <main>
 
-    <iframe id="frame" title="סקיצה" scrolling="no"></iframe>
-
-    <nav class="picker" aria-label="בחירת צורה">
-      <button data-sketch="jellyfish" data-height="1150">מדוזה</button>
-      <button data-sketch="jellyfish-down" data-height="1030">מטריה</button>
-      <button data-sketch="tubes" data-height="930">מסלולים</button>
-    </nav>
+    <iframe id="frame" title="סקיצה" scrolling="no" src="sketches/invisible-rules/"></iframe>
 
     <section class="about">
       <p>
@@ -110,26 +78,16 @@
   </main>
 
   <script>
-    const buttons = document.querySelectorAll(".picker button");
+    // Keep the frame as tall as the sketch inside it (the height changes between shapes)
     const frame = document.getElementById("frame");
-
-    function choose(name) {
-      let chosen = null;
-      buttons.forEach(b => {
-        const on = b.dataset.sketch === name;
-        b.setAttribute("aria-pressed", on);
-        if (on) chosen = b;
-      });
-      if (!chosen) return choose("jellyfish");
-
-      frame.src = "sketches/" + name + "/";
-      frame.style.height = chosen.dataset.height + "px";
-      history.replaceState(null, "", "#" + name);
+    function fit() {
+      try {
+        const h = frame.contentDocument.body.scrollHeight;
+        if (h) frame.style.height = h + "px";
+      } catch (e) {}
     }
-
-    buttons.forEach(b => b.addEventListener("click", () => choose(b.dataset.sketch)));
-
-    choose(location.hash.slice(1) || "jellyfish");
+    frame.addEventListener("load", fit);
+    setInterval(fit, 500);
   </script>
 </body>
 </html>

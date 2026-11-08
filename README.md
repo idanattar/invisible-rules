@@ -3,10 +3,8 @@
 סקיצות p5.js מבוססות Social Force Model.
 
 ## מבנה
-- `index.html` – העמוד הראשי עם בחירת שלוש הצורות
-- `sketches/jellyfish/` – מדוזה רדיאלית
-- `sketches/jellyfish-down/` – מדוזה
-- `sketches/tubes/` – טיובות הקשת
+- `index.html` – העמוד הראשי
+- `sketches/invisible-rules/` – הסקיצה (1 מדוזה · 2 מטריה · 3 מסלולים)
 
 ## העלאה ל־GitHub Pages
 1. יוצרים repository חדש ב־GitHub (למשל `invisible-rules`), ציבורי.
