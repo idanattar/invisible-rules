@@ -20,6 +20,7 @@ const MODES = [
 ];
 
 let mode = null;        // the running mode
+let ready = false;      // false while a mode is being set up
 let modeIndex = -1;
 let modeButtons = [];
 
@@ -47,9 +48,13 @@ function switchMode(i) {
   if (i === modeIndex) return;
   if (mode) mode.cleanup();
 
+  // resizeCanvas() inside the mode's setup redraws right away,
+  // so drawing waits until the new mode is fully set up
+  ready = false;
   modeIndex = i;
   mode = MODES[i].make();
   mode.setup();
+  ready = true;
 
   modeButtons.forEach((b, j) => {
     b.style("font-weight", j === i ? "bold" : "normal");
@@ -58,15 +63,15 @@ function switchMode(i) {
 }
 
 function draw() {
-  mode.draw();
+  if (ready) mode.draw();
 }
 
 function mousePressed() {
-  mode.mousePressed();
+  if (ready) mode.mousePressed();
 }
 
 function mouseDragged() {
-  mode.mouseDragged();
+  if (ready) mode.mouseDragged();
 }
 
 function keyPressed() {
@@ -75,7 +80,7 @@ function keyPressed() {
     switchMode(i);
     return false;
   }
-  return mode.keyPressed();
+  if (ready) return mode.keyPressed();
 }
 
 // =================================================
