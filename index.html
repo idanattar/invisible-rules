@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>חוקים בלתי נראים · עידן עטר</title>
+  <style>
+    :root {
+      --bg: #0f1218;
+      --line: #2a303c;
+      --text: #e6e8ee;
+      --muted: #8a91a0;
+    }
+
+    * { box-sizing: border-box; }
+
+    html, body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: "Assistant", "Segoe UI", Arial, sans-serif;
+    }
+
+    main {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+
+    /* The sketch */
+    iframe {
+      display: block;
+      width: 100%;
+      border: 0;
+      background: var(--bg);
+    }
+
+    /* Shape selector */
+    .picker {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      margin: 18px 0 36px;
+    }
+
+    .picker button {
+      background: transparent;
+      color: var(--muted);
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      padding: 9px 22px;
+      font: inherit;
+      font-size: 16px;
+      cursor: pointer;
+      transition: color 0.2s, border-color 0.2s;
+    }
+
+    .picker button:hover { color: var(--text); border-color: #4a5264; }
+
+    .picker button[aria-pressed="true"] {
+      color: var(--text);
+      border-color: var(--text);
+    }
+
+    /* About */
+    .about {
+      border-top: 1px solid var(--line);
+      padding-top: 22px;
+    }
+
+    .about p {
+      margin: 0 0 18px;
+      max-width: 720px;
+      color: var(--muted);
+      line-height: 1.7;
+      font-size: 15px;
+    }
+
+    .about b { color: var(--text); font-weight: 600; }
+
+    .credit {
+      color: var(--text);
+      font-size: 14px;
+      padding-bottom: 30px;
+    }
+  </style>
+</head>
+<body>
+  <main>
+
+    <iframe id="frame" title="סקיצה" scrolling="no"></iframe>
+
+    <nav class="picker" aria-label="בחירת צורה">
+      <button data-sketch="jellyfish" data-height="1150">מדוזה</button>
+      <button data-sketch="jellyfish-down" data-height="1030">מטריה</button>
+      <button data-sketch="tubes" data-height="930">מסלולים</button>
+    </nav>
+
+    <section class="about">
+      <p>
+        העבודה מבוססת על <b>Social Force Model</b> (הלבינג ומולנר, 1995), מודל שמדמה תנועה של קהל.
+        בכל רגע פועלים על כל עיגול שלושה כוחות: משיכה לשער שלו, דחייה מעיגולים אחרים (מרחב אישי)
+        ודחייה מקירות. כל צבע רואה רק את השער שלו, והקירות בלתי נראים. אף אחד לא מתכנת את הפקקים,
+        הנתיבים וצווארי הבקבוק — הם נוצרים מעצמם מתוך הכללים הפשוטים האלה. כל עיגול משאיר קו שקוף
+        כמעט לגמרי, והקווים מצטברים לתמונה אחת, כמו חשיפה ארוכה בצילום, שחושפת את החוקים שאי אפשר לראות.
+      </p>
+      <div class="credit">נוצר על ידי עידן עטר</div>
+    </section>
+
+  </main>
+
+  <script>
+    const buttons = document.querySelectorAll(".picker button");
+    const frame = document.getElementById("frame");
+
+    function choose(name) {
+      let chosen = null;
+      buttons.forEach(b => {
+        const on = b.dataset.sketch === name;
+        b.setAttribute("aria-pressed", on);
+        if (on) chosen = b;
+      });
+      if (!chosen) return choose("jellyfish");
+
+      frame.src = "sketches/" + name + "/";
+      frame.style.height = chosen.dataset.height + "px";
+      history.replaceState(null, "", "#" + name);
+    }
+
+    buttons.forEach(b => b.addEventListener("click", () => choose(b.dataset.sketch)));
+
+    choose(location.hash.slice(1) || "jellyfish");
+  </script>
+</body>
+</html>
